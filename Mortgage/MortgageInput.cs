@@ -8,14 +8,14 @@ namespace MortgageParser_JeremiahMcDonald.Mortgage
     public sealed class MortgageInput
     {
         public double Price { get; }
-        public double DownPayment { get; }
+        public double DownPercent { get; }
         public double RatePercent { get; }
         public int TermYears { get; }
 
-        public MortgageInput(double price, double downPayment, double ratePercent, int termYears)
+        public MortgageInput(double price, double downPercent, double ratePercent, int termYears)
         {
             Price = price;
-            DownPayment = downPayment;
+            DownPercent = downPercent;
             RatePercent = ratePercent;
             TermYears = termYears;
         }
