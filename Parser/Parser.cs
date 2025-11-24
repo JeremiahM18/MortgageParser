@@ -43,10 +43,13 @@ namespace MortgageParser_JeremiahMcDonald.Parser
             Consume(TokenType.TERM, "Expected keyword 'term' after interest rate.");
             int term = ConsumeInt("Expected term in years after 'term'.");
 
+            //Consume(TokenType.EOF, "Expected end of input after term.");
+            SkipTrailingCommas();
             Consume(TokenType.EOF, "Expected end of input after term.");
 
+
             // Value verification
-            if(price <= 0)
+            if (price <= 0)
                 throw new ValueErrorException("Home price must be greater than zero.");
 
             if(down < 0 || down >= 100)
@@ -87,7 +90,7 @@ namespace MortgageParser_JeremiahMcDonald.Parser
         {
             if (Check(type))
                 return Advance();
-            throw new SyntaxErrorException(errorMessage + $" Found '{Peek().Lexeme}' at position {Peek().Position}.");
+            throw new SyntaxErrorException(errorMessage + $" Found token {Peek().Type} at position {Peek().Position}.");
         }
 
         private bool Match(TokenType type)
@@ -102,7 +105,10 @@ namespace MortgageParser_JeremiahMcDonald.Parser
 
         private bool Check(TokenType type)
         {
-            if (IsAtEnd()) return false;
+            if (_current >= _tokens.Count)
+            {
+                return false;
+            }
             return Peek().Type == type;
         }
 
@@ -114,7 +120,7 @@ namespace MortgageParser_JeremiahMcDonald.Parser
 
         private bool IsAtEnd()
         {
-            return Peek().Type == TokenType.EOF;
+            return _current >= _tokens.Count || Peek().Type == TokenType.EOF;
         }
 
         private Token Peek()
@@ -125,6 +131,11 @@ namespace MortgageParser_JeremiahMcDonald.Parser
         private Token Previous()
         {
             return _tokens[_current - 1];
+        }
+
+        private void SkipTrailingCommas()
+        {
+            while (Match(TokenType.COMMA)) { }
         }
     }
 }
